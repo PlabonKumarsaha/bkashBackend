@@ -19,7 +19,6 @@ public class User extends BaseModel {
     private Boolean isMerchant;
     private double openingBalance;
     private Long nid;
-   // @NaturalId
     private String phone;
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)

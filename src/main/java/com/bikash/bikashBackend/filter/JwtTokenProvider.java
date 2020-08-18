@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
-    private String secretKey = "BkashSecureProject";
+    private String secretKey = "BkashSecureApi";
     private Long expireHour = Long.valueOf("5");
 
     public String generateToken(Authentication authentication, HttpServletRequest request) {
@@ -49,10 +49,10 @@ public class JwtTokenProvider {
     public Boolean isValidateToken(String token, HttpServletRequest request) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            if (!request.getRemoteAddr().equals(getClientIpFromJwtToken(token))){
+            if (!request.getRemoteAddr().equals(getClientIpFromJwtToken(token))) {
                 return false;
             }
-                return true;
+            return true;
         } catch (Exception e) {
             return false;
         }

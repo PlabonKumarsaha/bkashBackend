@@ -29,6 +29,6 @@ public class AuthController {
     @ValidateData
     @GetMapping(UrlConstraint.AuthManagement.LOGIN)
     public Response login(@RequestBody @Valid LoginDto loginDto, BindingResult result, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        return authService.login(loginDto,httpServletRequest);
+        return authService.login(loginDto, httpServletRequest);
     }
 }
