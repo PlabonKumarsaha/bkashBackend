@@ -22,7 +22,7 @@ public class User extends BaseModel {
    // @NaturalId
     private String phone;
     private String email;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<Role> roles;
 }
