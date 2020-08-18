@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
-    private String secretKey = "SpringBootTutorial";
+    private String secretKey = "BkashSecureProject";
     private Long expireHour = Long.valueOf("5");
 
     public String generateToken(Authentication authentication, HttpServletRequest request) {
