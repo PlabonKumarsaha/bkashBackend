@@ -1,13 +1,12 @@
 package com.bikash.bikashBackend.Service;
 
+import com.bikash.bikashBackend.Model.User;
+import com.bikash.bikashBackend.dto.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.nio.file.attribute.UserPrincipal;
 
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
@@ -19,11 +18,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user =  userService.getUserByUserName(username);
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        User user = userService.getUserByPhone(phone);
         UserPrincipal userDetails = UserPrincipal.create(user);
-        if (userDetails==null){
-            throw new UsernameNotFoundException("UserName Not Found");
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("Phone Number Not Found");
         }
         return userDetails;
     }

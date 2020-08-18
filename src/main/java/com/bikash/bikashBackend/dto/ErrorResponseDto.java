@@ -1,4 +1,4 @@
-package com.bikash.bikashBackend.DTO;
+package com.bikash.bikashBackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

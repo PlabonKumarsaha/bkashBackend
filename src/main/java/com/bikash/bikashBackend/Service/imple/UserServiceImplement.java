@@ -1,6 +1,6 @@
 package com.bikash.bikashBackend.Service.imple;
 
-import com.bikash.bikashBackend.DTO.UserDto;
+import com.bikash.bikashBackend.dto.UserDto;
 import com.bikash.bikashBackend.Model.User;
 import com.bikash.bikashBackend.Service.UserService;
 import com.bikash.bikashBackend.View.Response;
@@ -16,7 +16,7 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public User getUserByUserName(String username) {
+    public User getUserByPhone(String phone) {
         return null;
     }
 

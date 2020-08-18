@@ -1,6 +1,6 @@
 package com.bikash.bikashBackend.View;
 
-import com.bikash.bikashBackend.DTO.ErrorResponseDto;
+import com.bikash.bikashBackend.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 

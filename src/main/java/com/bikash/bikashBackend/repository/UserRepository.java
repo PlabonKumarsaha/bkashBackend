@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
-    User findByUsernameAndIsActiveTrue(String username);
+    User findByPhoneAndIsActiveTrue(String phone);
 
     User findByIdAndIsActiveTrue(Long id);
 

@@ -2,6 +2,7 @@ package com.bikash.bikashBackend.Model;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,16 +12,17 @@ import java.util.List;
 
 @Data
 @Entity
-public class User extends BaseModel{
+public class User extends BaseModel {
 
     private String username;
     private String password;
-    private long balance;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    //to make it not exclusable by the api to call
+    private Boolean isMerchant;
+    private double openingBalance;
+    private Long nid;
+   // @NaturalId
+    private String phone;
+    private String email;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Role> roles;
-
-
-
 }
