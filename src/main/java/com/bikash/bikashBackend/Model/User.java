@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Data

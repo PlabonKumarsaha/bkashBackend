@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Data
 public class UserDto {
@@ -15,20 +16,21 @@ public class UserDto {
     @Size(min = 8, max = 20, message = "Password length should be in between 8 to 20")
     @JsonProperty
     private String password;
-    @AssertTrue
-    private boolean isMerchant;
-
-    @DecimalMin("1.00")
-    private double openingBalance;
-    @Min(value = 10, message = "Nid length should be 10 or more")
-    @Max(value = 17, message = "Nid length not more then 17")
-    private Long nid;
-    @NotBlank(message = "Email field should not be empty")
-    @Email(regexp = "^(.+)@(.+)$", message = "Invalid Email Pattern")
-    private String email;
+    //@AssertTrue
+    @NotNull(message = "isMerchant is Mandatory")
+    private Boolean isMerchant;
+    @NotEmpty(message = "Phone Number is Mandatory")
     @Pattern(regexp = "^(?:\\+?88)?01[135-9]\\d{8}$", message = "invalid mobile number.")
     @Size(max = 11, message = "digits should be 11")
     private String phone;
+    @DecimalMin("1.00")
+    private double openingBalance;
+    @NotNull(message = "Nid is Mandatory")
+    //@Min(value = 10, message = "Nid length should be 10 or more")
+    private Long nid;
+    @NotEmpty(message = "Email field should not be empty")
+    @Email(regexp = "^(.+)@(.+)$", message = "Invalid Email Pattern")
+    private String email;
 
 
 }

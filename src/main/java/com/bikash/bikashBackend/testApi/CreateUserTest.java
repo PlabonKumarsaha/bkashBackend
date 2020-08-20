@@ -50,14 +50,10 @@ public class CreateUserTest {
             user.setIsMerchant(true);
             user.setOpeningBalance(Double.parseDouble("15290"));
             user.setNid(Long.parseLong("1234567890"));
-            user.setPhone(phone);
-            user.setEmail("golamkibria.java@gmail.com");
-    //role.setUsers(Arrays.asList(user));
-            // role.setUsers(Arrays.asList(user));
-
+            user.setPhone("01531921892");
 
         }
-        
+
         user.setRoles(Arrays.asList(role));
         user = userRepository.save(user);
 

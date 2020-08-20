@@ -16,9 +16,9 @@ public class UrlConstraint {
         public static final String GET = "/{id}";
         public static final String GET_ALL = "/all";
     }
-    public static class CustomerManagement {
-        public static final String ROOT = API + VERSION + "/customers";
-        public static final String GET_ALL_CUSTOMER = "/all-Customer";
+    public static class UserManagement {
+        public static final String ROOT = API + VERSION + "/users";
+        public static final String GET_USER = "/all-User";
         public static final String CREATE = "/create";
     }
     public static class AuthManagement {
