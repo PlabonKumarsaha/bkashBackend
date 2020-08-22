@@ -1,8 +1,10 @@
 package com.bikash.bikashBackend.Service.imple;
 
-import com.bikash.bikashBackend.Model.Role;
-import com.bikash.bikashBackend.Model.User;
+import com.bikash.bikashBackend.Model.*;
 import com.bikash.bikashBackend.Service.AuthService;
+import com.bikash.bikashBackend.Service.TransactionDetailsService;
+import com.bikash.bikashBackend.Service.TransactionService;
+import com.bikash.bikashBackend.Service.UserBalanceService;
 import com.bikash.bikashBackend.View.Response;
 import com.bikash.bikashBackend.View.ResponseBuilder;
 import com.bikash.bikashBackend.dto.LoginDto;
@@ -25,6 +27,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.Date;
 
 @Service("authService")
 public class AuthServiceImple implements AuthService {
@@ -34,15 +37,21 @@ public class AuthServiceImple implements AuthService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final TransactionService transactionService;
+    private final TransactionDetailsService transactionDetailsService;
+    private final UserBalanceService userBalanceService;
 
     @Autowired
-    public AuthServiceImple(UserRepository userRepository, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public AuthServiceImple(UserRepository userRepository, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository, TransactionService transactionService, TransactionDetailsService transactionDetailsService, UserBalanceService userBalanceService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.transactionService = transactionService;
+        this.transactionDetailsService = transactionDetailsService;
+        this.userBalanceService = userBalanceService;
     }
 
     @Override
@@ -63,18 +72,17 @@ public class AuthServiceImple implements AuthService {
 
     @Override
     public Response create(UserDto userDto, BindingResult result, HttpServletRequest request) {
-        String temp = "User";
         User user = modelMapper.map(userDto, User.class);
         user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        int roleCustomerCount = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
-        int roleCustomerCount1 = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
+        int isUser = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
+        int isMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
 
         Role role;
-        if (roleCustomerCount == 0 || roleCustomerCount1 == 0) {
+        if (isUser == 0 || isMerchant == 0) {
             role = new Role();
-            if (user.getIsMerchant()) {//for merchant
+            if (user.getIsMerchant()) {
                 role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
                 role.setName(RoleConstraint.ROLE_MERCHANT.name());
                 role = roleRepository.save(role);
@@ -92,8 +100,21 @@ public class AuthServiceImple implements AuthService {
 
         user.setRoles(Collections.singletonList(role));
         user = userRepository.save(user);
+
         if (user != null) {
-            return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, temp + " Created Successfully", user.getPhone());
+            Transactions transactions ;
+             transactions = transactionService.create(user.getId(), user.getOpeningBalance(), 0, new Date());
+            if (transactions != null) {
+                TransactionDetails transactionDetails;
+                transactionDetails = transactionDetailsService.create(transactions.getTransactionId(), user.getId(), user.getOpeningBalance());
+                if (transactionDetails!=null){
+                    UserBalance userBalance ;
+                    userBalance = userBalanceService.create(user.getId(),user.getOpeningBalance());
+                    if (userBalance!=null){
+                        return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Account Successfully Created", transactionDetails.getTransactionId());
+                    }
+                }
+            }
         }
         return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
