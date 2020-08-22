@@ -19,7 +19,7 @@ public class TransactionDetailsServiceImple implements TransactionDetailsService
     @Override
     public TransactionDetails create(Long transactionId, Long userId, double openingBalance) {
         if (openingBalance == 0) {
-
+            //this is not a account opening time Transaction..This is another time Transaction
         }
         TransactionDetails transactionDetails = new TransactionDetails();
         transactionDetails.setTransactionId(transactionId);

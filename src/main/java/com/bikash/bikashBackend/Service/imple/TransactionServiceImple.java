@@ -23,7 +23,7 @@ public class TransactionServiceImple implements TransactionService {
     @Override
     public Transactions create(Long userId, double openingBalance, double transactionAmount, Date date) {
         if (openingBalance == 0) {
-            //transactions
+            //this is not a account opening time Transaction..This is another time Transaction
         }
         Transactions transactions = new Transactions();
         transactions.setTransactionRef("openingBalance");
@@ -45,8 +45,6 @@ public class TransactionServiceImple implements TransactionService {
                 }catch (Exception e){
                  logger.info("ERROR is :  "+e.getMessage());
                 }
-                //transactions2=  transactionsRepository.save(transactions2);
-
             }
 
         }
