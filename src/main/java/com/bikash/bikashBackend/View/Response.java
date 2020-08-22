@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 public class Response {
 
-
         @JsonInclude(JsonInclude.Include.ALWAYS)
         private long timestamp;
         @JsonInclude(JsonInclude.Include.ALWAYS)
@@ -21,6 +20,8 @@ public class Response {
         @JsonInclude(JsonInclude.Include.ALWAYS)
         private String message;
         @JsonInclude(JsonInclude.Include.NON_NULL)
+        private Long transactionId;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         private Object content;
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private int numberOfElement;
@@ -28,5 +29,6 @@ public class Response {
         private long rowCount;
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private List<ErrorResponseDto> errors;
+
 
 }

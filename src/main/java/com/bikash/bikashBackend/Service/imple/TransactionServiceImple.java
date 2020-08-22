@@ -38,7 +38,7 @@ public class TransactionServiceImple implements TransactionService {
                 String uniqueTransactionId = String.valueOf(timestamp).concat(userId.toString());
                 currentTransaction.setTransactionId(Long.parseLong(uniqueTransactionId));
                 try {
-                    currentTransaction=  transactionsRepository.save(currentTransaction);
+                    currentTransaction=  transactionsRepository.save(currentTransaction);//update currentTransaction for set unique Transaction id
                     if (currentTransaction!=null){
                         return currentTransaction;
                     }

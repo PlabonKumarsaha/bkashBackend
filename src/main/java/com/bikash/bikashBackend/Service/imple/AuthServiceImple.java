@@ -100,18 +100,15 @@ public class AuthServiceImple implements AuthService {
 
         user.setRoles(Collections.singletonList(role));
         user = userRepository.save(user);
-
+//now save account opening time Transaction,TransactionDetails,and set userBalance
         if (user != null) {
-            Transactions transactions ;
-             transactions = transactionService.create(user.getId(), user.getOpeningBalance(), 0, new Date());
+            Transactions transactions = transactionService.create(user.getId(), user.getOpeningBalance(), 0, new Date());
             if (transactions != null) {
-                TransactionDetails transactionDetails;
-                transactionDetails = transactionDetailsService.create(transactions.getTransactionId(), user.getId(), user.getOpeningBalance());
-                if (transactionDetails!=null){
-                    UserBalance userBalance ;
-                    userBalance = userBalanceService.create(user.getId(),user.getOpeningBalance());
-                    if (userBalance!=null){
-                        return ResponseBuilder.getSuccessResponce(HttpStatus.CREATED, "Account Successfully Created", transactionDetails.getTransactionId());
+                TransactionDetails transactionDetails = transactionDetailsService.create(transactions.getTransactionId(), user.getId(), user.getOpeningBalance());
+                if (transactionDetails != null) {
+                    UserBalance userBalance = userBalanceService.create(user.getId(), user.getOpeningBalance());
+                    if (userBalance != null) {
+                        return ResponseBuilder.getSuccessResponseForTransactions(HttpStatus.CREATED, "Account Successfully Created", transactionDetails.getTransactionId());
                     }
                 }
             }

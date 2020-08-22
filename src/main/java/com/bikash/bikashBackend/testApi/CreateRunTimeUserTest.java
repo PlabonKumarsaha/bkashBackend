@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @Configuration
-public class CreateUserTest {
+public class CreateRunTimeUserTest {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -24,7 +24,7 @@ public class CreateUserTest {
     private String password;
 
     @Autowired
-    public CreateUserTest(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public CreateRunTimeUserTest(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,12 +45,14 @@ public class CreateUserTest {
         User user = userRepository.findByPhoneAndIsActiveTrue(phone);
         if (user == null) {
             user = new User();
-            user.setUsername("kibria");
+            user.setCreatedBy("RunTimeUser");
+            user.setUsername("Golam Kibria");
             user.setPassword(passwordEncoder.encode(password));
             user.setIsMerchant(true);
-            user.setOpeningBalance(Double.parseDouble("15290"));
+            user.setOpeningBalance(Double.parseDouble("55290"));
             user.setNid(Long.parseLong("1234567890"));
             user.setPhone("01531921892");
+            user.setEmail("golamkibria.java@gmail.com");
 
         }
 

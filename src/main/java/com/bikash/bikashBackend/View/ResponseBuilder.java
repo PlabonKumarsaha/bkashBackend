@@ -52,6 +52,15 @@ public class ResponseBuilder {
                 .timestamp(new Date().getTime())
                 .build();
     }
+    public static Response getSuccessResponseForTransactions(HttpStatus status, String message, Long transactionId) {
+        return Response.builder()
+                .message(message)
+                .status(status.getReasonPhrase())
+                .transactionId(transactionId)
+                .statusCode(status.value())
+                .timestamp(new Date().getTime())
+                .build();
+    }
 
     public static Response getSuccessResponce(HttpStatus status, String message, Object content, int numberOfElement) {
         return Response.builder()
