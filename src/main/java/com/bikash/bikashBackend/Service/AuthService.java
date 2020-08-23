@@ -10,5 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface AuthService {
     Response login(LoginDto loginDto, HttpServletRequest request);
-    Response create(UserDto userDto, BindingResult result,HttpServletRequest request);
+    Response createUserAccount(UserDto userDto, BindingResult result,HttpServletRequest request);
+
+    Response createMerchantAccount(UserDto userDto, BindingResult bindingResult, HttpServletRequest request);
 }

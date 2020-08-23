@@ -71,35 +71,77 @@ public class AuthServiceImple implements AuthService {
     }
 
     @Override
-    public Response create(UserDto userDto, BindingResult result, HttpServletRequest request) {
+    public Response createUserAccount(UserDto userDto, BindingResult result, HttpServletRequest request) {
+        User user = modelMapper.map(userDto, User.class);
+        user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        if (userRepository.findUserPhoneByPhone(user.getPhone()) == null) {
+            Role role;
+            role = new Role();
+            if (user.getIsMerchant() == false) {
+                int haveAnyUser = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
+                if (haveAnyUser == 0) {
+                    role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+                    role.setName(RoleConstraint.ROLE_USER.name());
+                    role = roleRepository.save(role);
+                }
+                role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
+                user.setRoles(Collections.singletonList(role));
+                user = userRepository.save(user);
+            }
+            if (user.getIsMerchant()) {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.NOT_ACCEPTABLE, "For Create User Account IsMerchant Must Be false", null);
+            }
+//now save account opening time Transaction,TransactionDetails,and set userBalance
+            Response response = createTransaction(user);
+            return response;
+        }
+        if (userRepository.findUserPhoneByPhone(user.getPhone()).equals(user.getPhone())) {
+            return ResponseBuilder.getFailureResponce(HttpStatus.NOT_ACCEPTABLE, "You already have an account with this phone number , try another one number");
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    }
+
+    @Override
+    public Response createMerchantAccount(UserDto userDto, BindingResult bindingResult, HttpServletRequest request) {
+
         User user = modelMapper.map(userDto, User.class);
         user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role;
-        role = new Role();
-        if (user.getIsMerchant() == false) {
-            int haveAnyUser = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
-            if (haveAnyUser == 0) {
-                role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-                role.setName(RoleConstraint.ROLE_USER.name());
-                role = roleRepository.save(role);
+        if (userRepository.findUserPhoneByPhone(user.getPhone()) == null) {
+            Role role;
+            role = new Role();
+            if (user.getIsMerchant()) {
+                role = createMerchantAccountRole(role);
+                user.setRoles(Collections.singletonList(role));
+                user = userRepository.save(user);
+            } else {
+                return ResponseBuilder.getSuccessResponce(HttpStatus.NOT_ACCEPTABLE, "For Create Merchant Account IsMerchant Must Be True", null);
             }
-            role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
-        }
-        if (user.getIsMerchant()) {
-            int haveAnyMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
-            if (haveAnyMerchant == 0) {
-                role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-                role.setName(RoleConstraint.ROLE_MERCHANT.name());
-                role = roleRepository.save(role);
-            }
-            role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
-        }
-
-        user.setRoles(Collections.singletonList(role));
-        user = userRepository.save(user);
 //now save account opening time Transaction,TransactionDetails,and set userBalance
+            Response response = createTransaction(user);
+            return response;
+        }
+        if (userRepository.findUserPhoneByPhone(user.getPhone()).equals(user.getPhone())) {
+            return ResponseBuilder.getFailureResponce(HttpStatus.NOT_ACCEPTABLE, "You already have an account with this phone number , try another one number");
+        }
+        return ResponseBuilder.getFailureResponce(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    }
+
+    private Role createMerchantAccountRole(Role role) {
+        int haveAnyMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
+        if (haveAnyMerchant == 0) {
+            role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+            role.setName(RoleConstraint.ROLE_MERCHANT.name());
+            role = roleRepository.save(role);
+            return role;
+        }
+        role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
+        return role;
+    }
+
+    public Response createTransaction(User user) {
         if (user != null) {
             Transactions transactions = transactionService.create(user.getId(), user.getOpeningBalance(), 0, new Date());
             if (transactions != null) {

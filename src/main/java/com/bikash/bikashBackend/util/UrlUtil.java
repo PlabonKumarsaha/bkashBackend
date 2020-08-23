@@ -5,5 +5,6 @@ public class UrlUtil {
     public static String permitAllUrl[] = {
             UrlConstraint.AuthManagement.ROOT + allPrefix,
             UrlConstraint.UserManagement.ROOT + UrlConstraint.UserManagement.CREATE,
+            //UrlConstraint.MerchantManagement.ROOT + UrlConstraint.MerchantManagement.CREATE
     };
 }

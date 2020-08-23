@@ -51,7 +51,7 @@ public class CreateRunTimeUserTest {
             user.setIsMerchant(true);
             user.setOpeningBalance(Double.parseDouble("55290"));
             user.setNid(Long.parseLong("1234567890"));
-            user.setPhone("01531921892");
+            user.setPhone(phone);
             user.setEmail("golamkibria.java@gmail.com");
         }
 
