@@ -23,7 +23,7 @@ public class UserDto {
     @Pattern(regexp = "^(?:\\+?88)?01[135-9]\\d{8}$", message = "invalid mobile number.")
     @Size(max = 11, message = "digits should be 11")
     private String phone;
-    @DecimalMin("1.00")
+    @DecimalMin(value = "500.00",message = "Opening balance must be 500 or more")
     private double openingBalance;
     @NotNull(message = "Nid is Mandatory")
     //@Min(value = 10, message = "Nid length should be 10 or more")

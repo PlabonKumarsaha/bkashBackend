@@ -53,7 +53,6 @@ public class CreateRunTimeUserTest {
             user.setNid(Long.parseLong("1234567890"));
             user.setPhone("01531921892");
             user.setEmail("golamkibria.java@gmail.com");
-
         }
 
         user.setRoles(Arrays.asList(role));

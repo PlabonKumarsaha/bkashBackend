@@ -88,13 +88,13 @@ public class AuthServiceImple implements AuthService {
             role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
         }
         if (user.getIsMerchant()) {
-           int haveAnyMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
+            int haveAnyMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
             if (haveAnyMerchant == 0) {
                 role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
                 role.setName(RoleConstraint.ROLE_MERCHANT.name());
                 role = roleRepository.save(role);
             }
-            role= roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
+            role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
         }
 
         user.setRoles(Collections.singletonList(role));

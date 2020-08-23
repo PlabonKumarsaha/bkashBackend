@@ -19,10 +19,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmailAndIsActiveTrue(String email);
 
     int countAllByIsActiveTrue();
+
     int countByUsernameAndIsActiveTrue(String name);
 
     List<User> findAllByIsActiveTrue();
 
-    @Query(value = "SELECT r.id FROM User r WHERE r.phone= :phone",nativeQuery = true)
+    @Query(value = "SELECT r.id FROM User r WHERE r.phone= :phone", nativeQuery = true)
     Long findUserIdByPhone(@Param("phone") String phone);
 }
