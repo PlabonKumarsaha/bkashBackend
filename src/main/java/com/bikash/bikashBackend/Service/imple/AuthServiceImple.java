@@ -76,26 +76,25 @@ public class AuthServiceImple implements AuthService {
         user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        int isUser = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
-        int isMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
-
         Role role;
-        if (isUser == 0 || isMerchant == 0) {
-            role = new Role();
-            if (user.getIsMerchant()) {
-                role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-                role.setName(RoleConstraint.ROLE_MERCHANT.name());
-                role = roleRepository.save(role);
-            } else {
+        role = new Role();
+        if (user.getIsMerchant() == false) {
+            int haveAnyUser = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
+            if (haveAnyUser == 0) {
                 role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
                 role.setName(RoleConstraint.ROLE_USER.name());
                 role = roleRepository.save(role);
             }
-        } else {
-            if (user.getIsMerchant()) {
-                role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
-            }
             role = roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_USER.name());
+        }
+        if (user.getIsMerchant()) {
+           int haveAnyMerchant = roleRepository.countByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
+            if (haveAnyMerchant == 0) {
+                role.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+                role.setName(RoleConstraint.ROLE_MERCHANT.name());
+                role = roleRepository.save(role);
+            }
+            role= roleRepository.findByNameAndIsActiveTrue(RoleConstraint.ROLE_MERCHANT.name());
         }
 
         user.setRoles(Collections.singletonList(role));
